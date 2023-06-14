@@ -45,7 +45,7 @@ void PDMAnalyzer::WorkerThread()
 	U64 low_duration = 0;
 	U64 high_duration = 0;
 	mClock->AdvanceToNextEdge();
-	while (low_duration == 0 || abs(low_duration - high_duration) > (low_duration + high_duration) / 2) {
+	while (low_duration == 0 || abs((int64_t) (low_duration - high_duration)) > (low_duration + high_duration) / 2) {
 		mClock->AdvanceToNextEdge(); // Falling edge
 		low_start = mClock->GetSampleNumber();
 		mClock->AdvanceToNextEdge(); // Rising edge
