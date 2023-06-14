@@ -6,7 +6,8 @@ PDMAnalyzerSettings::PDMAnalyzerSettings()
 :	mClockChannel( UNDEFINED_CHANNEL ),
     mDataChannel( UNDEFINED_CHANNEL),
     mBitsPerSample( 64 ),
-    mOffsetStart( 0 )
+    mOffsetStart( 0 ),
+    mRisingEdge( true )
 {
 	mClockChannelInterface.reset( new AnalyzerSettingInterfaceChannel() );
 	mClockChannelInterface->SetTitleAndTooltip( "Clock", "Clock" );
@@ -28,10 +29,16 @@ PDMAnalyzerSettings::PDMAnalyzerSettings()
 	mOffsetStartInterface->SetMin( 0 );
 	mOffsetStartInterface->SetInteger( mOffsetStart );
 
+	mRisingEdgeInterface.reset( new AnalyzerSettingInterfaceBool() );
+	mRisingEdgeInterface->SetTitleAndTooltip( "Rising/falling edge",  "Select to sample data on rising edge. Deselect to sample data on falling edge" );
+	mRisingEdgeInterface->SetCheckBoxText( "Select to sample data on rising edge. Deselect to sample data on falling edge" );
+	mRisingEdgeInterface->SetValue( mRisingEdge );
+
 	AddInterface( mClockChannelInterface.get() );
 	AddInterface( mDataChannelInterface.get() );
 	AddInterface( mBitsPerSampleInterface.get() );
 	AddInterface( mOffsetStartInterface.get() );
+	AddInterface( mRisingEdgeInterface.get() );
 
 	AddExportOption( 0, "Export as text/csv file" );
 	AddExportExtension( 0, "text", "txt" );
@@ -52,6 +59,7 @@ bool PDMAnalyzerSettings::SetSettingsFromInterfaces()
 	mDataChannel = mDataChannelInterface->GetChannel();
 	mBitsPerSample = mBitsPerSampleInterface->GetInteger();
 	mOffsetStart = mOffsetStartInterface->GetInteger();
+	mRisingEdge = mRisingEdgeInterface->GetValue();
 
 	ClearChannels();
 	AddChannel( mClockChannel, "Clock", true );
@@ -66,6 +74,7 @@ void PDMAnalyzerSettings::UpdateInterfacesFromSettings()
 	mDataChannelInterface->SetChannel( mDataChannel );
 	mBitsPerSampleInterface->SetInteger( mBitsPerSample );
 	mOffsetStartInterface->SetInteger( mOffsetStart );
+	mRisingEdgeInterface->SetValue( mRisingEdge );
 }
 
 void PDMAnalyzerSettings::LoadSettings( const char* settings )
@@ -77,6 +86,7 @@ void PDMAnalyzerSettings::LoadSettings( const char* settings )
     text_archive >> mDataChannel;
 	text_archive >> mBitsPerSample;
 	text_archive >> mOffsetStart;
+	text_archive >> mRisingEdge;
 
 	ClearChannels();
 	AddChannel( mClockChannel, "Clock", true );
@@ -93,6 +103,7 @@ const char* PDMAnalyzerSettings::SaveSettings()
     text_archive << mDataChannel;
 	text_archive << mBitsPerSample;
 	text_archive << mOffsetStart;
+	text_archive << mRisingEdge;
 
 	return SetReturnString( text_archive.GetString() );
 }

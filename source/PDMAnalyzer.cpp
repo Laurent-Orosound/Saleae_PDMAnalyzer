@@ -60,6 +60,12 @@ void PDMAnalyzer::WorkerThread()
 		mClock->AdvanceToNextEdge(); // Rising edge
 	}
 
+	// If the sampling is not done on the rising edge, go to the next edge to start on a falling edge
+	if ( !mSettings->mRisingEdge )
+	{
+		mClock->AdvanceToNextEdge();
+	}
+
 	// Process the data
 	for( ; ; )
 	{
@@ -77,11 +83,11 @@ void PDMAnalyzer::WorkerThread()
 			if( mData->GetBitState() == BIT_HIGH )
 				data++;
 
-			// Next falling edge.
+			// Next edge (which kind depends on mSettings->mRisingEdge)
 			// TODO(tannewt): Support stereo data by reading the data here.
 			mClock->AdvanceToNextEdge();
 
-			// Next rising edge.
+			// Next edge (which kind depends on mSettings->mRisingEdge)
 			mClock->AdvanceToNextEdge();
 		}
 
