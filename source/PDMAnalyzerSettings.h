@@ -19,11 +19,13 @@ public:
 	Channel mClockChannel;
 	Channel mDataChannel;
 	U32 mBitsPerSample;
+	U32 mOffsetStart;
 
 protected:
 	std::auto_ptr< AnalyzerSettingInterfaceChannel >	mClockChannelInterface;
 	std::auto_ptr< AnalyzerSettingInterfaceChannel >	mDataChannelInterface;
 	std::auto_ptr< AnalyzerSettingInterfaceInteger >	mBitsPerSampleInterface;
+	std::auto_ptr< AnalyzerSettingInterfaceInteger >	mOffsetStartInterface;
 };
 
 #endif //PDM_ANALYZER_SETTINGS

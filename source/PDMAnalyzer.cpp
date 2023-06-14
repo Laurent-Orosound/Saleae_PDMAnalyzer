@@ -53,7 +53,14 @@ void PDMAnalyzer::WorkerThread()
 		high_duration = mClock->GetSampleOfNextEdge() - mClock->GetSampleNumber();
 	}
 
+	// Apply the offset
+	for ( uint8_t i_offset = 0 ; i_offset < mSettings->mOffsetStart ; i_offset++ )
+	{
+		mClock->AdvanceToNextEdge(); // Falling edge
+		mClock->AdvanceToNextEdge(); // Rising edge
+	}
 
+	// Process the data
 	for( ; ; )
 	{
 		U8 data = 0;
